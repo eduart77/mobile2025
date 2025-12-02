@@ -1,5 +1,5 @@
 Description:
-RoomScan Pro is a mobile application that helps homeowners and renters visualize and manage their living spaces. The app uses your iPhone's advanced LiDAR sensor to create detailed 3D scans of rooms, or allows you to upload existing apartment floor plans. Once scanned, you can virtually arrange furniture, plan renovations, and share room layouts with family members or contractors. The app stores all your room data securely on your device and syncs it to the cloud, so you can access your layouts from any device. Whether you're moving to a new place, redecorating, or just want to see how new furniture would look, RoomScan Pro makes space planning simple and intuitive.
+RoomScan Pro is a mobile application that helps homeowners and renters visualize and manage their living spaces. The app allows you to upload existing apartment floor plans (image/PDF/SVG) or draw basic room outlines and enter dimensions. Once a floor plan is provided, you can virtually arrange furniture, plan renovations, and share room layouts with family members or contractors. The app stores all your room data securely on your device and syncs it to the cloud, so you can access your layouts from any device. Whether you're moving to a new place, redecorating, or just want to see how new furniture would look, RoomScan Pro makes space planning simple and intuitive.
 
 Domain details:
 Entity 1: Room
@@ -7,7 +7,7 @@ Entity 1: Room
   - roomId (String): Unique identifier for each room, automatically generated when a room is created
   - roomName (String): User-defined name for the room (e.g., "Living Room", "Master Bedroom")
   - roomType (String): Category of the room (bedroom, kitchen, bathroom, living room, office, etc.)
-  - scanData (Binary): 3D point cloud data captured by LiDAR sensor or uploaded floor plan image
+  - scanData (Binary): Uploaded floor plan data (image/PDF/SVG) or parsed vector representation
   - dimensions (Object): Room measurements including length, width, height in meters
   - createdDate (DateTime): Timestamp when the room was first scanned or created
   - lastModified (DateTime): Timestamp of the most recent modification to the room data
@@ -26,8 +26,8 @@ Room Entity Operations:
   
     CREATE Room:
   
-      - User initiates room scan using LiDAR sensor or uploads floor plan image
-      - App processes scan data and extracts room dimensions automatically
+      - User uploads a floor plan image/PDF/SVG or draws a basic outline
+      - App processes the plan and extracts room dimensions when possible
       - User provides room name and selects room type from predefined categories
       - System generates unique roomId and timestamps
       - Room data is validated for completeness before saving
@@ -37,13 +37,13 @@ Room Entity Operations:
       - Retrieve single room by roomId for detailed view and editing
       - List all rooms belonging to user with basic information (name, type, dimensions)
       - Search rooms by name or filter by room type
-      - Load room with all associated furniture items for 3D visualization
-      - Access room scan data for rendering 3D model
+      - Load room with all associated furniture items for 2D/3D visualization
+      - Access uploaded plan data for rendering and editing
       
     UPDATE Room:
   
       - Modify room name, type, or dimensions through user interface
-      - Re-scan room to update scanData while preserving existing furniture placements
+      - Re-upload or redraw plan to update scanData while preserving existing furniture placements
       - Update room metadata (lastModified timestamp)
       - Validate changes before applying to ensure data integrity
       - Trigger furniture position recalculation if room dimensions change significantly
@@ -52,7 +52,7 @@ Room Entity Operations:
   
       - Remove room and all associated furniture items
       - Confirm deletion with user to prevent accidental data loss
-      - Clean up related scan data and 3D models
+      - Clean up related plan data and generated models
       - Update user's room count and available storage space
       - Log deletion for potential recovery within grace period
     
@@ -61,7 +61,7 @@ Furniture Entity Operations
     CREATE Furniture:
   
       - User selects furniture from catalog or creates custom item
-      - Position furniture in 3D space using touch gestures or precise coordinates
+      - Position furniture in 2D or 3D space using touch gestures or precise coordinates
       - Set furniture dimensions and orientation within room constraints
       - Validate furniture placement doesn't overlap with existing items
       - Generate unique furnitureId and associate with target room
@@ -87,7 +87,7 @@ Furniture Entity Operations
       - Remove furniture item from room layout
       - Confirm deletion to prevent accidental removal
       - Update room's furniture count and available space calculations
-      - Clean up furniture-specific data and 3D model references
+      - Clean up furniture-specific data and model references
       - Log deletion for potential undo functionality
 
 Local Database Operations:

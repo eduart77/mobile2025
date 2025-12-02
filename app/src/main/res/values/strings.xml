@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">RoomScan Pro</string>
+    <string name="create_room">Create Room</string>
+    <string name="read_rooms">Read Rooms</string>
+    <string name="update_room">Update Room</string>
+    <string name="delete_room">Delete Room</string>
+    <string name="room_name">Room Name</string>
+    <string name="room_type">Room Type</string>
+    <string name="dimensions">Dimensions (L x W x H in meters)</string>
+    <string name="save">Save</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="select_room">Select Room</string>
+    <string name="length">Length (m)</string>
+    <string name="width">Width (m)</string>
+    <string name="height">Height (m)</string>
+</resources>
+
