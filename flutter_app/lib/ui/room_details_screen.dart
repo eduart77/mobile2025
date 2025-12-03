@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../data/room.dart';
-import 'create_furniture_screen.dart';
+import 'package:room_scan_pro_flutter/data/in_memory_room_repository.dart';
+import 'package:room_scan_pro_flutter/data/room.dart';
+import 'select_furniture_screen.dart'; // New import
 import 'delete_furniture_screen.dart';
 
 class RoomDetailsScreen extends StatefulWidget {
@@ -37,19 +38,19 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text("Furniture List", style: Theme.of(context).textTheme.headlineSmall),
+            child: Text("Furniture in Room", style: Theme.of(context).textTheme.headlineSmall),
           ),
           Expanded(
             child: _room!.furniture.isEmpty
-                ? const Center(child: Text("No furniture in this room."))
+                ? const Center(child: Text("No furniture placed in this room yet."))
                 : ListView.builder(
               itemCount: _room!.furniture.length,
               itemBuilder: (ctx, i) {
                 final f = _room!.furniture[i];
                 return ListTile(
-                  leading: CircleAvatar(child: Text(f.name[0])),
+                  leading: CircleAvatar(child: Text(f.name.isNotEmpty ? f.name[0] : "?")),
                   title: Text(f.name),
-                  subtitle: Text("Color: ${f.color}\n${f.length}x${f.width}x${f.height}m"),
+                  subtitle: Text("Color: ${f.color}"),
                   isThreeLine: true,
                 );
               },
@@ -62,10 +63,11 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await Navigator.push(context, MaterialPageRoute(builder: (_) => CreateFurnitureScreen(roomId: widget.roomId)));
+                      // Navigate to SELECT screen instead of CREATE
+                      await Navigator.push(context, MaterialPageRoute(builder: (_) => SelectFurnitureScreen(roomId: widget.roomId)));
                       _refresh();
                     },
-                    child: const Text("Add Furniture"),
+                    child: const Text("Place Furniture"),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -76,7 +78,7 @@ class _RoomDetailsScreenState extends State<RoomDetailsScreen> {
                       await Navigator.push(context, MaterialPageRoute(builder: (_) => DeleteFurnitureScreen(roomId: widget.roomId)));
                       _refresh();
                     },
-                    child: const Text("Delete Furniture"),
+                    child: const Text("Remove Furniture"),
                   ),
                 ),
               ],

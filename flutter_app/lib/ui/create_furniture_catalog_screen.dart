@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:room_scan_pro_flutter/data/in_memory_room_repository.dart';
+import '../data/in_memory_room_repository.dart';
 
-class CreateFurnitureScreen extends StatefulWidget {
-  final String roomId;
-  const CreateFurnitureScreen({super.key, required this.roomId});
+class CreateFurnitureCatalogScreen extends StatefulWidget {
+  const CreateFurnitureCatalogScreen({super.key});
 
   @override
-  State<CreateFurnitureScreen> createState() => _CreateFurnitureScreenState();
+  State<CreateFurnitureCatalogScreen> createState() => _CreateFurnitureCatalogScreenState();
 }
 
-class _CreateFurnitureScreenState extends State<CreateFurnitureScreen> {
+class _CreateFurnitureCatalogScreenState extends State<CreateFurnitureCatalogScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _lengthController = TextEditingController();
@@ -20,7 +19,7 @@ class _CreateFurnitureScreenState extends State<CreateFurnitureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Furniture')),
+      appBar: AppBar(title: const Text('Create Furniture Type')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -30,7 +29,7 @@ class _CreateFurnitureScreenState extends State<CreateFurnitureScreen> {
               children: [
                 TextFormField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
+                  decoration: const InputDecoration(labelText: 'Furniture Name (e.g. Sofa)'),
                   validator: (v) => v!.isEmpty ? 'Required' : null,
                 ),
                 const SizedBox(height: 10),
@@ -62,8 +61,7 @@ class _CreateFurnitureScreenState extends State<CreateFurnitureScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      InMemoryRoomRepository().addFurniture(
-                        widget.roomId,
+                      InMemoryRoomRepository().createFurnitureInCatalog(
                         _nameController.text,
                         double.parse(_lengthController.text),
                         double.parse(_widthController.text),
@@ -73,7 +71,7 @@ class _CreateFurnitureScreenState extends State<CreateFurnitureScreen> {
                       Navigator.pop(context);
                     }
                   },
-                  child: const Text('Save Furniture'),
+                  child: const Text('Add to Catalog'),
                 ),
               ],
             ),

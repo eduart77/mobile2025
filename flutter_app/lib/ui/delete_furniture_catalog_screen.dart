@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:room_scan_pro_flutter/data/in_memory_room_repository.dart';
-import 'package:room_scan_pro_flutter/data/furniture.dart';
-import 'package:room_scan_pro_flutter/data/room.dart';
+import '../data/in_memory_room_repository.dart';
+import '../data/furniture.dart';
 
-class DeleteFurnitureScreen extends StatefulWidget {
-  final String roomId;
-  const DeleteFurnitureScreen({super.key, required this.roomId});
+class DeleteFurnitureCatalogScreen extends StatefulWidget {
+  const DeleteFurnitureCatalogScreen({super.key});
 
   @override
-  State<DeleteFurnitureScreen> createState() => _DeleteFurnitureScreenState();
+  State<DeleteFurnitureCatalogScreen> createState() => _DeleteFurnitureCatalogScreenState();
 }
 
-class _DeleteFurnitureScreenState extends State<DeleteFurnitureScreen> {
+class _DeleteFurnitureCatalogScreenState extends State<DeleteFurnitureCatalogScreen> {
   final InMemoryRoomRepository _repository = InMemoryRoomRepository();
   Furniture? _selectedFurniture;
-  List<Furniture> _furnitureList = [];
+  List<Furniture> _catalog = [];
 
   @override
   void initState() {
@@ -23,9 +21,8 @@ class _DeleteFurnitureScreenState extends State<DeleteFurnitureScreen> {
   }
 
   void _refreshList() {
-    Room? room = _repository.findRoom(widget.roomId);
     setState(() {
-      _furnitureList = room?.furniture ?? [];
+      _catalog = _repository.listFurnitureCatalog();
       _selectedFurniture = null;
     });
   }
@@ -33,9 +30,9 @@ class _DeleteFurnitureScreenState extends State<DeleteFurnitureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Delete Furniture')),
-      body: _furnitureList.isEmpty
-          ? const Center(child: Text('No furniture to delete'))
+      appBar: AppBar(title: const Text('Delete From Catalog')),
+      body: _catalog.isEmpty
+          ? const Center(child: Text('Catalog is empty'))
           : Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -43,9 +40,9 @@ class _DeleteFurnitureScreenState extends State<DeleteFurnitureScreen> {
           children: [
             DropdownButtonFormField<Furniture>(
               value: _selectedFurniture,
-              hint: const Text("Select Item to Delete"),
+              hint: const Text("Select Furniture Type to Delete"),
               isExpanded: true,
-              items: _furnitureList.map((f) {
+              items: _catalog.map((f) {
                 return DropdownMenuItem(
                   value: f,
                   child: Text("${f.name} (${f.color})"),
@@ -61,11 +58,14 @@ class _DeleteFurnitureScreenState extends State<DeleteFurnitureScreen> {
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
                 onPressed: () {
                   if (_selectedFurniture != null) {
-                    _repository.deleteFurniture(widget.roomId, _selectedFurniture!.id);
-                    Navigator.pop(context); // Go back
+                    _repository.deleteFurnitureFromCatalog(_selectedFurniture!.id);
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Removed from catalog')),
+                    );
                   }
                 },
-                child: const Text('Delete Selected Item'),
+                child: const Text('Delete Selected Type'),
               ),
             ),
           ],

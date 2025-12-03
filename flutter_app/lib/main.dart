@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'ui/create_room_screen.dart';
 import 'ui/read_rooms_screen.dart';
-import 'ui/delete_room_screen.dart'; // Import the new screen
+import 'ui/delete_room_screen.dart';
+import 'ui/furniture_list_screen.dart'; // Import furniture list
 
 void main() {
   runApp(const MyApp());
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'RoomScan Pro',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
@@ -34,49 +36,51 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // CREATE
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CreateRoomScreen()));
-                  },
-                  child: const Text('Create Room'),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text("Room Operations", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateRoomScreen())),
+                    child: const Text('Create Room'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReadRoomsScreen())),
+                    child: const Text('Read Rooms'),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade50),
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DeleteRoomScreen())),
+                    child: const Text('Delete Room', style: TextStyle(color: Colors.red)),
+                  ),
+                ),
 
-              // READ (and UPDATE via list)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ReadRoomsScreen()));
-                  },
-                  child: const Text('Read Rooms'),
+                const Divider(height: 40),
+                const Text("Furniture Catalog", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FurnitureListScreen())),
+                    child: const Text('Manage Furniture Catalog'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-
-              // DELETE
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const DeleteRoomScreen()));
-                  },
-                  child: const Text('Delete Room'),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
