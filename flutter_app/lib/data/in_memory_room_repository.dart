@@ -1,6 +1,6 @@
 import 'dart:math';
-
 import 'room.dart';
+import 'furniture.dart';
 
 class InMemoryRoomRepository {
   static final InMemoryRoomRepository _instance = InMemoryRoomRepository._internal();
@@ -10,7 +10,11 @@ class InMemoryRoomRepository {
   }
 
   InMemoryRoomRepository._internal() {
-    _rooms.add(Room(id: _generateUuid(), name: 'Living Room', type: 'Living Room', length: 5.0, width: 4.0, height: 2.7));
+    // Seed some data
+    var livingRoom = Room(id: _generateUuid(), name: 'Living Room', type: 'Living Room', length: 5.0, width: 4.0, height: 2.7);
+    livingRoom.furniture.add(Furniture(id: _generateUuid(), name: 'Sofa', length: 2.0, width: 0.8, height: 1.0, color: 'Grey'));
+    _rooms.add(livingRoom);
+
     _rooms.add(Room(id: _generateUuid(), name: 'Bedroom', type: 'Bedroom', length: 4.0, width: 3.2, height: 2.7));
   }
 
@@ -34,9 +38,7 @@ class InMemoryRoomRepository {
 
   bool updateRoom(String id, String name, String type, double length, double width, double height) {
     final room = findRoom(id);
-    if (room == null) {
-      return false;
-    }
+    if (room == null) return false;
     room.name = name;
     room.type = type;
     room.length = length;
@@ -47,10 +49,33 @@ class InMemoryRoomRepository {
 
   bool deleteRoom(String id) {
     final room = findRoom(id);
-    if (room == null) {
-      return false;
-    }
+    if (room == null) return false;
     return _rooms.remove(room);
+  }
+
+  // --- Furniture Operations ---
+
+  void addFurniture(String roomId, String name, double length, double width, double height, String color) {
+    final room = findRoom(roomId);
+    if (room != null) {
+      room.furniture.add(Furniture(
+        id: _generateUuid(),
+        name: name,
+        length: length,
+        width: width,
+        height: height,
+        color: color,
+      ));
+    }
+  }
+
+  bool deleteFurniture(String roomId, String furnitureId) {
+    final room = findRoom(roomId);
+    if (room != null) {
+      room.furniture.removeWhere((f) => f.id == furnitureId);
+      return true;
+    }
+    return false;
   }
 
   String _generateUuid() {

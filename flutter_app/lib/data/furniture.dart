@@ -1,21 +1,17 @@
-import 'furniture.dart';
-
-class Room {
+class Furniture {
   String id;
   String name;
-  String type;
   double length;
   double width;
   double height;
-  List<Furniture> furniture;
+  String color;
 
-  Room({
+  Furniture({
     required this.id,
     required this.name,
-    required this.type,
     required this.length,
     required this.width,
     required this.height,
-    List<Furniture>? furniture,
-  }) : furniture = furniture ?? [];
+    required this.color,
+  });
 }

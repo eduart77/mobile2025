@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:room_scan_pro_flutter/data/in_memory_room_repository.dart';
 import 'package:room_scan_pro_flutter/data/room.dart';
 import 'package:room_scan_pro_flutter/ui/update_room_screen.dart';
+import 'package:room_scan_pro_flutter/ui/room_details_screen.dart'; // Import Details Screen
 
 class ReadRoomsScreen extends StatefulWidget {
   const ReadRoomsScreen({super.key});
@@ -17,7 +18,13 @@ class _ReadRoomsScreenState extends State<ReadRoomsScreen> {
   @override
   void initState() {
     super.initState();
-    _rooms = _repository.listRooms();
+    _refreshList();
+  }
+
+  void _refreshList() {
+    setState(() {
+      _rooms = _repository.listRooms();
+    });
   }
 
   @override
@@ -32,41 +39,29 @@ class _ReadRoomsScreenState extends State<ReadRoomsScreen> {
           final room = _rooms[index];
           return ListTile(
             title: Text(room.name),
+            subtitle: Text("${room.furniture.length} items"),
+            onTap: () {
+              // Tap on the row to view furniture (Read Furniture)
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RoomDetailsScreen(roomId: room.id)
+              ));
+            },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdateRoomScreen(room: room)));
+                  onPressed: () async {
+                    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => UpdateRoomScreen(room: room)));
+                    _refreshList();
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: const Icon(Icons.arrow_forward_ios),
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Delete Room'),
-                        content: const Text('Are you sure you want to delete this room?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('No'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _repository.deleteRoom(room.id);
-                                _rooms = _repository.listRooms();
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Yes'),
-                          ),
-                        ],
-                      ),
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RoomDetailsScreen(roomId: room.id)
+                    ));
                   },
                 ),
               ],
